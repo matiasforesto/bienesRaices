@@ -1,9 +1,19 @@
 //importar
 import express from "express"; // nueva forma nativo de javascript ECMAScript agregar en package.json "type": "module",
 import usuarioRoutes from './routes/usuarioRoutes.js'
+import dn from './config/db.js'
+import db from "./config/db.js";
 
 //crear la app
 const app= express();
+
+//conexion a la base de datos
+try{
+    await db.authenticate();
+    console.log('Conectado a la base de datos')
+}catch(error){
+    console.log(error)
+}
 
 //habilitar Pug
 app.set('view engine', 'pug')
