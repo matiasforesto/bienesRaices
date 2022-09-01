@@ -16,8 +16,13 @@ const formularioOlvidePassword = (req, res)=>{
     })
 }
 
+const registrar = (req, res) => {
+    console.log('REGISTRANDO...')
+}
+
 export {
     formularioLogin,
     formularioRegistro,
-    formularioOlvidePassword
+    formularioOlvidePassword,
+    registrar
 }
