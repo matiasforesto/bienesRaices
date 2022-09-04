@@ -1,5 +1,7 @@
 import {check, validationResult} from 'express-validator'
 import Usuario from '../models/Usuario.js'
+import { generarId } from '../helpers/tokens.js'
+import { emailRegistro } from '../helpers/emails.js'
 
 const formularioLogin = (req, res)=>{
     res.render('auth/login', {
@@ -13,14 +15,7 @@ const formularioRegistro = (req, res)=>{
     })
 }
 
-const formularioOlvidePassword = (req, res)=>{
-    res.render('auth/olvide-password', {
-        pagina: 'Recupera tu acceso a Bienes Raices'
-    })
-}
-
 const registrar = async (req, res) => {
-
     //Extraer los datos del req
     const {nombre, email, password} = req.body
 
@@ -61,17 +56,46 @@ const registrar = async (req, res) => {
     }
 
     // Crea usuario
-    await Usuario.create({
+    const usuario = await Usuario.create({
         nombre,
         email,
         password,
-        token: 123
+        token: generarId()
     }) //res.json(usuario)
+
+    //envia email de confirmacion
+    emailRegistro({
+        nombre: usuario.nombre,
+        email: usuario.email,
+        token: usuario.token
+    })
+
+    //mostrar mensaje de confirmacion
+    res.render('templates/mensaje', {
+        pagina: 'Cuenta Creada Correctamente',
+        mensaje: 'Hemos enviado un email de confirmación, revisa tu correo'
+    })
 }
+
+//Funcion que comprueba una cuenta
+const confirmar = (req, res, next) => {
+    const {token} = req.params
+    //Verificar si el token es valido
+    //Confirmar la cuenta
+    next()
+}
+
+const formularioOlvidePassword = (req, res)=>{
+    res.render('auth/olvide-password', {
+        pagina: 'Recupera tu acceso a Bienes Raices'
+    })
+}
+
 
 export {
     formularioLogin,
     formularioRegistro,
-    formularioOlvidePassword,
-    registrar
+    registrar,
+    confirmar,
+    formularioOlvidePassword
 }
