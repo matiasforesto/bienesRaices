@@ -3,7 +3,6 @@ import express from "express" // nueva forma nativo de javascript ECMAScript agr
 import csrf from "csurf"
 import cookieParser from "cookie-parser"
 import usuarioRoutes from './routes/usuarioRoutes.js'
-import dn from './config/db.js'
 import db from "./config/db.js"
 
 //crear la app
